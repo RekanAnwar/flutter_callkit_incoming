@@ -8,6 +8,7 @@ import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 
 class CallkitNotificationService : Service() {
@@ -50,7 +51,34 @@ class CallkitNotificationService : Service() {
 
 
     override fun onCreate() {
+        startForegroundNotification()
         super.onCreate()
+    }
+    
+    private fun startForegroundNotification() {
+        // Create a basic notification for immediate display to satisfy Android 8.0+ requirements
+        val tempNotificationId = 1000
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            FlutterCallkitIncomingPlugin.getInstance()?.getCallkitNotificationManager()
+                ?.createNotificationChanel(Bundle())
+        }
+        
+        val notification = NotificationCompat.Builder(this, CallkitNotificationManager.NOTIFICATION_CHANNEL_ID_ONGOING)
+            .setContentTitle("Call service")
+            .setContentText("Initializing...")
+            .setSmallIcon(R.drawable.ic_accept)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_CALL)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setOngoing(true)
+            .setSound(null)
+            .build()
+            
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(tempNotificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_PHONE_CALL)
+        } else {
+            startForeground(tempNotificationId, notification)
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
