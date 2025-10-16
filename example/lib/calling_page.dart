@@ -1,10 +1,10 @@
-import 'dart:convert';
 import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_callkit_incoming/entities/entities.dart';
 import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
-import 'package:flutter_callkit_incoming_example/app_router.dart';
 import 'package:flutter_callkit_incoming_example/navigation_service.dart';
 import 'package:http/http.dart';
 
@@ -47,12 +47,11 @@ class CallingPageState extends State<CallingPage> {
     return result;
   }
 
-
   @override
   Widget build(BuildContext context) {
     final params = jsonDecode(jsonEncode(
         ModalRoute.of(context)!.settings.arguments as Map<dynamic, dynamic>));
-    print(ModalRoute.of(context)!.settings.arguments);
+    log('ModalRoute.of(context)!.settings.arguments: ${ModalRoute.of(context)!.settings.arguments}');
     calling = CallKitParams.fromJson(params);
 
     var timeDisplay = intToTimeLeft(_start);
@@ -70,8 +69,7 @@ class CallingPageState extends State<CallingPage> {
               const Text('Calling...'),
               TextButton(
                 style: ButtonStyle(
-                  foregroundColor:
-                      MaterialStateProperty.all<Color>(Colors.blue),
+                  foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
                 ),
                 onPressed: () async {
                   if (calling != null) {
@@ -83,8 +81,7 @@ class CallingPageState extends State<CallingPage> {
               ),
               TextButton(
                 style: ButtonStyle(
-                  foregroundColor:
-                      MaterialStateProperty.all<Color>(Colors.blue),
+                  foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
                 ),
                 onPressed: () async {
                   if (calling != null) {
@@ -102,7 +99,6 @@ class CallingPageState extends State<CallingPage> {
       ),
     );
   }
-
 
   Future<void> makeFakeConnectedCall(id) async {
     await FlutterCallkitIncoming.setCallConnected(id);

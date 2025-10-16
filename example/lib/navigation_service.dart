@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 class NavigationService {
@@ -24,8 +26,8 @@ class NavigationService {
   /// `args` is optional data to be sent to new page
   Future<T?> pushNamed<T extends Object>(String routeName,
       {Object? args}) async {
-    print(navigationKey);
-    print(navigationKey.currentState);
+    log('navigationKey: $navigationKey');
+    log('navigationKey.currentState: ${navigationKey.currentState}');
     return navigationKey.currentState?.pushNamed<T>(
       routeName,
       arguments: args,
@@ -96,7 +98,7 @@ class NavigationService {
     );
   }
 
-  /// Consults the current route's [Route.willPop] method, and acts accordingly,
+  /// Consults the current route's [Route.pop] method, and acts accordingly,
   /// potentially popping the route as a result; returns whether the pop request
   /// should be considered handled.
   Future<bool> maybePop<T extends Object>([Object? args]) async {

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -10,8 +11,9 @@ import 'package:flutter_callkit_incoming_example/navigation_service.dart';
 import 'package:uuid/uuid.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print("Handling a background message: ${message.messageId}");
-  await Firebase.initializeApp(); //make sure firebase is initialized before using it (showCallkitIncoming)
+  log("Handling a background message: ${message.messageId}");
+  await Firebase
+      .initializeApp(); //make sure firebase is initialized before using it (showCallkitIncoming)
   showCallkitIncoming(const Uuid().v4());
 }
 
@@ -99,8 +101,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     var calls = await FlutterCallkitIncoming.activeCalls();
     if (calls is List) {
       if (calls.isNotEmpty) {
-        print('DATA: $calls');
-        if(calls[0]['id'] != null && calls[0]['isAccepted'] == true) {
+        log('DATA: $calls');
+        if (calls[0]['id'] != null && calls[0]['isAccepted'] == true) {
           _currentUuid = calls[0]['id'];
           return calls[0];
         } else {
@@ -117,13 +119,14 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   Future<void> checkAndNavigationCallingPage() async {
     var currentCall = await getCurrentCall();
     if (currentCall != null) {
-      NavigationService.instance.pushNamedIfNotCurrent(AppRoute.callingPage, args: currentCall);
+      NavigationService.instance
+          .pushNamedIfNotCurrent(AppRoute.callingPage, args: currentCall);
     }
   }
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    print(state);
+    log('AppLifecycleState: $state');
     if (state == AppLifecycleState.resumed) {
       //Check call when open app from background
       checkAndNavigationCallingPage();
@@ -141,12 +144,12 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
     _firebaseMessaging = FirebaseMessaging.instance;
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      print('Message title: ${message.notification?.title}, body: ${message.notification?.body}, data: ${message.data}');
+      log('Message title: ${message.notification?.title}, body: ${message.notification?.body}, data: ${message.data}');
       _currentUuid = _uuid.v4();
       showCallkitIncoming(_currentUuid!);
     });
     _firebaseMessaging.getToken().then((token) {
-      print('Device Token FCM: $token');
+      log('Device Token FCM: $token');
     });
   }
 
@@ -157,12 +160,15 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
       onGenerateRoute: AppRoute.generateRoute,
       initialRoute: AppRoute.homePage,
       navigatorKey: NavigationService.instance.navigationKey,
-      navigatorObservers: <NavigatorObserver>[NavigationService.instance.routeObserver],
+      navigatorObservers: <NavigatorObserver>[
+        NavigationService.instance.routeObserver
+      ],
     );
   }
 
   Future<void> getDevicePushTokenVoIP() async {
-    var devicePushTokenVoIP = await FlutterCallkitIncoming.getDevicePushTokenVoIP();
-    print(devicePushTokenVoIP);
+    var devicePushTokenVoIP =
+        await FlutterCallkitIncoming.getDevicePushTokenVoIP();
+    log(devicePushTokenVoIP);
   }
 }
