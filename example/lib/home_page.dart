@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -50,27 +52,27 @@ class HomePageState extends State<HomePage> {
               children: [
                 ElevatedButton.icon(
                   icon: const Icon(Icons.call),
-                  label: Text('Make fake call incoming'),
+                  label: const Text('Make fake call incoming'),
                   onPressed: makeFakeCallInComing,
                 ),
                 ElevatedButton.icon(
                   icon: const Icon(Icons.call_end),
-                  label: Text('End current call'),
+                  label: const Text('End current call'),
                   onPressed: endCurrentCall,
                 ),
                 ElevatedButton.icon(
                   icon: const Icon(Icons.call_made),
-                  label: Text('Start outgoing call'),
+                  label: const Text('Start outgoing call'),
                   onPressed: startOutGoingCall,
                 ),
                 ElevatedButton.icon(
                   icon: const Icon(Icons.call_merge),
-                  label: Text('Active calls'),
+                  label: const Text('Active calls'),
                   onPressed: activeCalls,
                 ),
                 ElevatedButton.icon(
                   icon: const Icon(Icons.clear_all_sharp),
-                  label: Text('End all calls'),
+                  label: const Text('End all calls'),
                   onPressed: endAllCalls,
                 ),
                 const Divider(),
@@ -137,7 +139,8 @@ class HomePageState extends State<HomePage> {
         id: _currentUuid,
         nameCaller: 'Hien Nguyen',
         appName: 'Callkit',
-        avatar: 'https://fastly.picsum.photos/id/773/200/300.jpg?hmac=nhH4e4UtqcS6I0hy7eCr9waIFzMYNaMkzety6PQnOHM',
+        avatar:
+            'https://fastly.picsum.photos/id/773/200/300.jpg?hmac=nhH4e4UtqcS6I0hy7eCr9waIFzMYNaMkzety6PQnOHM',
         handle: '0123456789',
         type: 0,
         duration: 30000,
@@ -164,7 +167,8 @@ class HomePageState extends State<HomePage> {
           logoUrl: 'assets/test.png',
           ringtonePath: 'system_ringtone_default',
           backgroundColor: '#0955fa',
-          backgroundUrl: 'https://fastly.picsum.photos/id/773/200/300.jpg?hmac=nhH4e4UtqcS6I0hy7eCr9waIFzMYNaMkzety6PQnOHM',
+          backgroundUrl:
+              'https://fastly.picsum.photos/id/773/200/300.jpg?hmac=nhH4e4UtqcS6I0hy7eCr9waIFzMYNaMkzety6PQnOHM',
           actionColor: '#4CAF50',
           textColor: '#ffffff',
           incomingCallNotificationChannelName: 'Incoming Call',
@@ -290,6 +294,9 @@ class HomePageState extends State<HomePage> {
             break;
           case Event.actionCallCustom:
             break;
+          case Event.actionCallConnected:
+            // TODO: Handle this case.
+            break;
         }
         callback(event);
       });
@@ -300,8 +307,7 @@ class HomePageState extends State<HomePage> {
 
   //check with https://events.hiennv.com
   Future<void> requestHttp(content) async {
-    get(Uri.parse(
-        'https://events.hiennv.com/api/logs?data=$content'));
+    get(Uri.parse('https://events.hiennv.com/api/logs?data=$content'));
   }
 
   void onEvent(CallEvent event) {
